@@ -130,7 +130,7 @@ while True:
             cv2.putText(frame, 'reposition', (10, 50), font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
         cv2.imshow('mask', mask)
-        cv2.imshow('frame', frame)
+        cv2.imshow('detect_img', frame)
     except :
         print(1111)
         pass
