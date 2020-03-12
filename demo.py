@@ -3,8 +3,8 @@ import openpose
 
 if __name__ == '__main__':
     openpose.run({
-        "proto": "model/pose_deploy_linevec.prototxt",
-        "model": "model/pose_iter_440000.caffemodel",
+        "proto": "./model/pose_coco.prototxt",
+        "model": "./model/pose_coco.caffemodel",
         "dataset": "COCO",
         "thr": 0.1,
         "width": 140,

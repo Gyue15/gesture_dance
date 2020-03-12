@@ -60,8 +60,10 @@ def run(args):
 
     # print(cap.get(5))
     while cv.waitKey(1) < 0:
+        # cap.set(3, 600)
+        # cap.set(4, 600)
         has_frame, frame = cap.read()
-        print(has_frame)
+        # print(has_frame)
         if not has_frame:
             cv.waitKey()
             break
