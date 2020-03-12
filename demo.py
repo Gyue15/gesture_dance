@@ -16,9 +16,9 @@ if __name__ == '__main__':
     # capture.set(cv2.CAP_PROP_FRAME_WIDTH, 68)
     # capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 100)
     # while True:
-    #     ret, frame = capture.read()
-    #     frame = cv2.flip(frame, 1)  # 镜像操作
-    #     cv2.imshow("video", frame)
+    #     ret, detect_img = capture.read()
+    #     detect_img = cv2.flip(detect_img, 1)  # 镜像操作
+    #     cv2.imshow("video", detect_img)
     #     key = cv2.waitKey(50)
     #     # print(key)
     #     if key == ord('q'):  # 判断是哪一个键按下
