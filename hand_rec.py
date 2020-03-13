@@ -2,14 +2,12 @@ import cv2
 import math
 
 # parameters
-cap_region_x_begin = 0.65  # start point/total width
-cap_region_y_end = 0.7  # start point/total width
-blurValue = 41  # GaussianBlur parameter
-angle_offset = 0.25
+cap_region_x_begin = 0.65
+cap_region_y_end = 0.7
+blurValue = 41
+angle_offset_left = 0.2
+angle_offset_right = 0.7
 
-# variables
-isBgCaptured = 0  # bool, whether the background captured
-triggerSwitch = False  # if true, keyborad simulator works
 
 def skin_detection(detect_img):
     # 肤色检测之一: YCrCb之Cr分量 + OTSU二值化
@@ -21,56 +19,73 @@ def skin_detection(detect_img):
     # 根据OTSU算法求图像阈值, 对图像进行二值化
     _, skin = cv2.threshold(cr1, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     skin = cv2.GaussianBlur(skin, (blurValue, blurValue), 0)
-    _, skin = cv2.threshold(skin, 60, 255, cv2.THRESH_BINARY)
+    _, skin = cv2.threshold(skin, 40, 255, cv2.THRESH_BINARY)
     return skin
 
 
-def angle_around_pi(angle):
-    return angle - angle_offset <= math.pi / 2 <= angle + angle_offset
+def angle_around(angle, benchmark):
+    return benchmark - angle_offset_left <= angle <= benchmark + angle_offset_right
 
 
-def calculate_fingers(max_contour, drawing):  # -> finished bool, cnt: finger count
+def gesture_detection(max_contour, drawing, frame):  # -> finished bool, cnt: finger count
     #  找到凸包
-    # angles = []
-    correct_defects = []
     hull = cv2.convexHull(max_contour, returnPoints=False)
+    direction = ""
     if len(hull) > 3:
         defects = cv2.convexityDefects(max_contour, hull)
         if defects is not None:
-            cnt = 0
+            fingers = 0
+            state = {"direction": '', "point": ''}
+            max_area = -1
             for i in range(defects.shape[0]):  # calculate the angle
                 s, e, f, d = defects[i][0]
                 start = tuple(max_contour[s][0])
                 end = tuple(max_contour[e][0])
                 far = tuple(max_contour[f][0])
-                a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-                b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
-                c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
-                angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  # cosine theorem
-                if angle <= math.pi / 2:  # angle less than 90 degree, treat as fingers
-                    cnt += 1
-                    # angles.append(angle)
+
+                far_len = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
+                end_len = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
+                start_len = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
+
+                angle_far = math.acos((end_len ** 2 + start_len ** 2 - far_len ** 2) / (2 * end_len * start_len))
+                angle_end = math.acos((far_len ** 2 + start_len ** 2 - end_len ** 2) / (2 * far_len * start_len))
+                angle_start = math.acos((end_len ** 2 + far_len ** 2 - start_len ** 2) / (2 * far_len * end_len))
+
+                if angle_end < angle_start:
+                    point = end
+                else:
+                    point = start
+
+                if angle_far <= math.pi / 2:
+                    fingers += 1
                     cv2.circle(drawing, far, 8, [211, 84, 0], -1)
-                if angle_around_pi(angle):
-                    correct_defects.append({"defect": defects[i], "angle": angle})
+                if angle_around(angle_far, math.pi / 2):
+                    if point[0] > far[0] and (point[0] == far[0] or -1 <= (point[1] - far[1]) / (point[0] - far[0])
+                                              <= 1):
+                        direction = "RIGHT"
+                    elif point[0] < far[0] and (point[0] == far[0] or -1 <= (point[1] - far[1]) / (point[0] - far[0])
+                                                <= 1):
+                        direction = "LEFT"
+                    elif point[1] > far[1] and (point[0] == far[0] or (point[1] - far[1]) / (point[0] - far[0]) <= -1
+                                                or (point[1] - far[1]) / (point[0] - far[0])) >= 1:
+                        direction = "DOWN"
+                    elif point[1] < far[1] and (point[0] == far[0] or (point[1] - far[1]) / (point[0] - far[0]) <= -1
+                                                or (point[1] - far[1]) / (point[0] - far[0])) >= 1:
+                        direction = "UP"
+                    else:
+                        direction = "NULL"
 
-            # print("inner finger: " + str(cnt))
-            # print("angles: " + str(angles))
-            return True, cnt, correct_defects
+                area = math.fabs(start[0] * far[1] + end[0] * start[1] + far[0] * end[1] - start[0] * end[1] - end[0]
+                                 * far[1] - far[0] * start[1])
+                if area > max_area:
+                    max_area = area
+                    state["direction"] = direction
+                    state['point'] = point
+
+            cv2.putText(frame, "%s: %s" % (state['direction'], str(state['point'])), (0, 150),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            return True, fingers, state['direction']
     return False, 0, None
-
-
-def detect_gesture(correct_defects, drawing):
-    # s, e, f, d = correct_defects[0]
-    # start = tuple(max_contour[s][0])
-    # end = tuple(max_contour[e][0])
-    # far = tuple(max_contour[f][0])
-    # a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-    # b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
-    # c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
-    for item in correct_defects:
-        angle = item["angle"]
-        cv2.putText(drawing, "pose", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
 
 def contour_detection(detect_img, drawing):
@@ -98,13 +113,11 @@ def contour_detection(detect_img, drawing):
 if __name__ == '__main__':
     camera = cv2.VideoCapture(0)
     camera.set(10, 10)
-    # cv2.namedWindow('trackbar')
-    # cv2.createTrackbar('trh1', 'trackbar', threshold, 100, lambda: print("threshold is " + threshold))
 
     while camera.isOpened():
         ret, frame = camera.read()
-        frame = cv2.bilateralFilter(frame, 5, 50, 100)  # smoothing filter
-        frame = cv2.flip(frame, 1)  # flip the detect_img horizontally
+        frame = cv2.bilateralFilter(frame, 5, 50, 100)
+        frame = cv2.flip(frame, 1)
         if frame is None:
             continue
         cv2.rectangle(frame, (int(cap_region_x_begin * frame.shape[1]), 0),
@@ -112,6 +125,8 @@ if __name__ == '__main__':
 
         # 肤色检测
         img = skin_detection(frame)
+
+        # 将手部切下来
         img = img[0:int(cap_region_y_end * frame.shape[0]), int(cap_region_x_begin * frame.shape[1]):frame.shape[1]]
 
         # 灰度转RGB，用于绘制调试用图
@@ -119,13 +134,14 @@ if __name__ == '__main__':
 
         # 边界检测
         res = contour_detection(img, img_rgb)
+
+        # 匹配手势
         if res is not None:
-            # 匹配手势
-            isFinishCal, cnt, defects = calculate_fingers(res, img_rgb)
+            isFinishCal, cnt, pose = gesture_detection(res, img_rgb, frame)
             if isFinishCal:
                 cv2.putText(frame, str(cnt + 1), (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3, cv2.LINE_AA)
-                if cnt <= 1:
-                    detect_gesture(defects, frame)
+                if pose:
+                    cv2.putText(frame, pose, (0, 200), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
         cv2.imshow('original', frame)
         cv2.imshow('output', img_rgb)
