@@ -205,25 +205,24 @@ class HandDetection(threading.Thread):
                             final_direction = last_direction
                             direction_cnt = 0
                     last_direction = final_pose['direction']
-                    # todo 调用业务逻辑
                     if frame_cnt == 0:
                         flag = False
                         if final_finger is not None:
-                            #             cv2.LINE_AA)
-                            print(final_finger)
                             flag = True
+                        if final_finger == 5:
+                            cv2.putText(img_rgb, str(final_direction), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 2,
+                                        (0, 0, 255), 3, cv2.LINE_AA)
                         if (final_direction is not None) and (final_direction != 'NOT_FOUND'):
                             cv2.putText(img_rgb, str(final_direction), (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255)
                                         , 3, cv2.LINE_AA)
                             cv2.putText(frame_to_show, str(final_direction), (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255)
                                         , 3, cv2.LINE_AA)
-                            print(final_direction)
-                            if final_direction == "UP":
-                                self.music_app.next()
                             flag = True
                         # 重置跳过的帧
                         if flag:
                             frame_cnt = self.sleep_frame
+                            self.music_app.set_rec_res({"set": True, "used": False, "fingers": final_finger,
+                                                        "direction": final_direction})
                     else:
                         frame_cnt -= 1
 

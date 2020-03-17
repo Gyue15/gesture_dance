@@ -27,13 +27,16 @@ class MusicApp(QMainWindow):
         self.model = QStandardItemModel(0, 1)
         self.song_list = QtWidgets.QTableView()
         self.play_btn = QPushButton('播放')
-        self.init_ui()
+        self.media_controls = QHBoxLayout()
+        # 共享变量
         self.image_to_show = None
+        self.rec_res = {"set": False, "used": True, "direction": None, "fingers": 0}
         # 摄像头窗口
         self.widget = QWidget()
         self.widget.move(1000, 200)
+        self.widget.resize(300, 200)
         self.widget.setWindowTitle("手势窗口")  # 窗口标题
-        self.videoFrame = QLabel('VideoCapture')
+        self.videoFrame = QLabel('正在打开摄像头，请稍等...')
         video_area = QVBoxLayout()
         self.widget.setLayout(video_area)
         video_area.addWidget(self.videoFrame)
@@ -43,6 +46,12 @@ class MusicApp(QMainWindow):
         self.timer.setInterval(20)
         self.timer.start()
         self.timer.timeout.connect(self.show_image)
+        self.have_song = False
+        self.volume_slider = QSlider(Qt.Horizontal, self)
+        self.volume_slider.setTracking(True)
+
+        # 初始化界面
+        self.init_ui()
 
     def init_ui(self):
         # Add file menu
@@ -74,10 +83,10 @@ class MusicApp(QMainWindow):
         self.setCentralWidget(wid)
 
         # 播放控件
-        volume_slider = QSlider(Qt.Horizontal, self)
-        volume_slider.setFocusPolicy(Qt.NoFocus)
-        volume_slider.valueChanged[int].connect(self.change_volume)
-        volume_slider.setValue(self.volume_initial_value)
+        self.volume_slider = QSlider(Qt.Horizontal, self)
+        self.volume_slider.setFocusPolicy(Qt.NoFocus)
+        self.volume_slider.valueChanged[int].connect(self.change_volume)
+        self.volume_slider.setValue(self.volume_initial_value)
         open_btn = QPushButton('打开...')
         prev_btn = QPushButton('上一首')
         next_btn = QPushButton('下一首')
@@ -89,19 +98,19 @@ class MusicApp(QMainWindow):
 
         # 按钮的layout
         control_area = QVBoxLayout()  # centralWidget
-        media_controls = QHBoxLayout()
+        self.media_controls = QHBoxLayout()
         # file_controls = QHBoxLayout()
 
         # 将播放控件添加到layout
-        media_controls.addWidget(open_btn)
-        media_controls.addWidget(prev_btn)
-        media_controls.addWidget(self.play_btn)
-        media_controls.addWidget(next_btn)
-        media_controls.addWidget(volume_slider)
+        self.media_controls.addWidget(open_btn)
+        self.media_controls.addWidget(prev_btn)
+        self.media_controls.addWidget(self.play_btn)
+        self.media_controls.addWidget(next_btn)
+        self.media_controls.addWidget(self.volume_slider)
 
         # 将layout添加到界面中
         control_area.addWidget(self.song_list)
-        control_area.addLayout(media_controls)
+        control_area.addLayout(self.media_controls)
         wid.setLayout(control_area)
 
         # 设置监听
@@ -141,6 +150,7 @@ class MusicApp(QMainWindow):
             else:
                 self.playlist.addMedia(QMediaContent(url))
         self.set_play_list()
+        self.have_song = True
 
     def add_files(self):
         if self.playlist.mediaCount() != 0:
@@ -152,6 +162,7 @@ class MusicApp(QMainWindow):
         self.set_play_list()
         self.player.pause()
         self.statusBar().showMessage("暂停：" + self.playlist.currentMedia().canonicalUrl().fileName())
+        self.have_song = True
 
     def folder_iterator(self):
         folder_chosen = QFileDialog.getExistingDirectory(self, 'Open Music Folder', '~')
@@ -170,20 +181,35 @@ class MusicApp(QMainWindow):
                     self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(it.filePath())))
 
     def start_or_stop(self):
+        print(self.player.state())
         if self.playlist.mediaCount() == 0:
             self.open_file()
         else:
-            if self.player.state() == 1:  # 判断播放状态，1表示播放中，2表示暂停
+            if self.player.state() == QMediaPlayer.PlayingState or \
+                    (self.player.state() == QMediaPlayer.PlayingState and self.play_btn.text() == '暂停'):
                 self.player.pause()
                 self.play_btn.setText('播放')
                 self.statusBar().showMessage("暂停：" + self.playlist.currentMedia().canonicalUrl().fileName())
-            elif self.player.state() == 2:
+            elif self.player.state() == QMediaPlayer.PausedState or \
+                    (self.player.state() == QMediaPlayer.PlayingState and self.play_btn.text() == '播放'):
                 self.player.play()
                 self.play_btn.setText('暂停')
                 self.statusBar().showMessage("正在播放：" + self.playlist.currentMedia().canonicalUrl().fileName())
 
     def change_volume(self, value):
         self.player.setVolume(value)
+
+    def volume_up(self):
+        volume = self.player.volume() + 10 if self.player.volume() + 10 <= 100 else 100
+        self.player.setVolume(volume)
+        self.volume_slider.setTracking(True)
+        self.volume_slider.setValue(volume)
+
+    def volume_down(self):
+        volume = self.player.volume() - 10 if self.player.volume() - 10 >= 0 else 0
+        self.player.setVolume(volume)
+        self.volume_slider.setTracking(True)
+        self.volume_slider.setValue(volume)
 
     def prev(self):
         if self.playlist.mediaCount() == 0:
@@ -229,28 +255,40 @@ class MusicApp(QMainWindow):
         app.setPalette(palette)
 
     def convert_image(self, frame):
-        # height, width, bytes_per_component = frame.shape
-        # bytes_per_line = bytes_per_component * width
-        # # 变换彩色空间顺序
-        # cv2.cvtColor(frame, cv2.COLOR_BGR2RGB, frame)
-        # # 转为QImage对象
-        # image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
-        # self.image_to_show = QPixmap.fromImage(image)
         if len(frame.shape) == 2:  # 若是灰度图则转为三通道
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
 
         rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # 将BGR转为RGB
-        # show_image(filename,rgb_image)
-        # rgb_image=Image.open(filename)
         rgb_image = np.asanyarray(rgb_image)
         label_image = QImage(rgb_image.data, rgb_image.shape[1], rgb_image.shape[0], QImage.Format_RGB888)  # 转化为QImage
         self.image_to_show = QPixmap(label_image)
-        # show_image("src resize image",image)
 
     def show_image(self):
-        # print(self.image_to_show)
         if self.image_to_show is not None:
             self.videoFrame.setPixmap(self.image_to_show)
+        if self.rec_res['set'] and not self.rec_res['used']:
+            final_direction = self.rec_res['direction']
+            final_fingers = self.rec_res['fingers']
+            if final_fingers == 5:
+                self.start_or_stop()
+                self.rec_res['used'] = True
+                return
+            if final_direction is not None and final_direction != 'NOT_FOUND':
+                if final_direction == "RIGHT":
+                    self.next()
+                    self.rec_res['used'] = True
+                if final_direction == "LEFT":
+                    self.prev()
+                    self.rec_res['used'] = True
+                if final_direction == "UP":
+                    self.volume_up()
+                    self.rec_res['used'] = True
+                if final_direction == "DOWN":
+                    self.volume_down()
+                    self.rec_res['used'] = True
+
+    def set_rec_res(self, res):
+        self.rec_res = res
 
 
 if __name__ == '__main__':
