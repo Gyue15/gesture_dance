@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7e5fa780-8500-4a2b-a4b1-55bc45c76d66" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hand_rec.py" beforeDir="false" afterPath="$PROJECT_DIR$/hand_rec.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/music_player.py" beforeDir="false" afterPath="$PROJECT_DIR$/music_player.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -199,7 +198,7 @@
       <workItem from="1583581661678" duration="2976000" />
       <workItem from="1584010129838" duration="34082000" />
       <workItem from="1584366473558" duration="2847000" />
-      <workItem from="1584369526203" duration="19255000" />
+      <workItem from="1584369526203" duration="19997000" />
     </task>
     <servers />
   </component>
@@ -223,25 +222,25 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="507" y="212" key="FileChooserDialogImpl/0.0.1440.900@0.0.1440.900" timestamp="1582612917062" />
-    <state width="1398" height="261" key="GridCell.Tab.0.bottom" timestamp="1584434863392">
+    <state width="1398" height="261" key="GridCell.Tab.0.bottom" timestamp="1584435772208">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="261" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584434863392" />
+    <state width="1398" height="261" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584435772208" />
     <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.23.1440.822@0.23.1440.822" timestamp="1582615528432" />
-    <state width="1398" height="261" key="GridCell.Tab.0.center" timestamp="1584434863390">
+    <state width="1398" height="261" key="GridCell.Tab.0.center" timestamp="1584435772205">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="261" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1584434863390" />
+    <state width="1398" height="261" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1584435772205" />
     <state width="1398" height="245" key="GridCell.Tab.0.center/0.23.1440.822@0.23.1440.822" timestamp="1582615528428" />
-    <state width="1398" height="261" key="GridCell.Tab.0.left" timestamp="1584434863389">
+    <state width="1398" height="261" key="GridCell.Tab.0.left" timestamp="1584435772203">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="261" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1584434863389" />
+    <state width="1398" height="261" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1584435772203" />
     <state width="1398" height="245" key="GridCell.Tab.0.left/0.23.1440.822@0.23.1440.822" timestamp="1582615528427" />
-    <state width="1398" height="261" key="GridCell.Tab.0.right" timestamp="1584434863391">
+    <state width="1398" height="261" key="GridCell.Tab.0.right" timestamp="1584435772206">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="261" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1584434863391" />
+    <state width="1398" height="261" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1584435772206" />
     <state width="1398" height="245" key="GridCell.Tab.0.right/0.23.1440.822@0.23.1440.822" timestamp="1582615528430" />
     <state width="1398" height="303" key="GridCell.Tab.1.bottom" timestamp="1584366450023">
       <screen x="0" y="0" width="1440" height="900" />
@@ -279,7 +278,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/gesture_dance$demo.coverage" NAME="demo Coverage Results" MODIFIED="1583758818876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gesture_dance$hand_rec.coverage" NAME="hand_rec Coverage Results" MODIFIED="1584425427634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/gesture_dance$music_player.coverage" NAME="music_player Coverage Results" MODIFIED="1584434863381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gesture_dance$music_player.coverage" NAME="music_player Coverage Results" MODIFIED="1584435772180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gesture_dance$finger.coverage" NAME="finger Coverage Results" MODIFIED="1584014320615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gesture_dance$main.coverage" NAME="main Coverage Results" MODIFIED="1582615382791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

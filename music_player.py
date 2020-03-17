@@ -18,7 +18,7 @@ class MusicApp(QMainWindow):
         super().__init__()
         self.player = QMediaPlayer()
         self.playlist = QMediaPlaylist()
-        self.title = 'GestureTunes'
+        self.title = 'GestureTunes - player window'
         self.left = 300
         self.top = 300
         self.width = 600
@@ -35,12 +35,13 @@ class MusicApp(QMainWindow):
         self.widget = QWidget()
         self.widget.move(1000, 200)
         self.widget.resize(300, 200)
-        self.widget.setWindowTitle("手势窗口")  # 窗口标题
+        self.widget.setWindowTitle("GestureTunes - gesture window")  # 窗口标题
         self.videoFrame = QLabel('正在打开摄像头，请稍等...')
         video_area = QVBoxLayout()
         self.widget.setLayout(video_area)
         video_area.addWidget(self.videoFrame)
         self.widget.show()
+        # self.widget.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         # 定时器
         self.timer = QTimer()
         self.timer.setInterval(20)
@@ -139,7 +140,7 @@ class MusicApp(QMainWindow):
             self.song_list.selectRow(0)
 
     def open_file(self):
-        song = QFileDialog.getOpenFileName(self, "Open Song", "~", "Sound Files (*.mp3 *.ogg *.wav *.m4a)")
+        song = QFileDialog.getOpenFileName(self, "打开文件", "~", "音频文件 (*.mp3 *.ogg *.wav *.m4a)")
 
         if song[0] != '':
             url = QUrl.fromLocalFile(song[0])
