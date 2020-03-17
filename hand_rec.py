@@ -104,9 +104,6 @@ class HandDetection(threading.Thread):
                         state["direction"] = direction
                         state['point'] = point
                         state['area'] = area
-
-                # cv2.putText(frame, "%s: %s" % (state['direction'], str(state['point'])), (0, 100),
-                #             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
                 return True, fingers, state['direction'] if state['area'] == max_area else 'NOT_FOUND'
         return False, 0, None
 
@@ -132,7 +129,6 @@ class HandDetection(threading.Thread):
         return None
 
     def window_rec(self, res_list):
-        # print(res_list)
         if len(res_list) < self.window_size:
             return None
         fingers_map = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
@@ -146,8 +142,6 @@ class HandDetection(threading.Thread):
         if t_cnt >= self.valuable_window * self.window_size:
             f_max = sorted(fingers_map.items(), key=lambda x: x[1], reverse=True)[0]
             d_max = sorted(directions_map.items(), key=lambda x: x[1], reverse=True)[0]
-            # print(f_max)
-            # print(d_max)
             return {'fingers': f_max[0] if f_max[1] > self.window_size * self.valuable_window * self.valuable_frame else None,
                     'direction': d_max[0] if d_max[1] > self.window_size * self.valuable_window * self.valuable_frame else None}
         return None
@@ -210,8 +204,15 @@ class HandDetection(threading.Thread):
                         if final_finger is not None:
                             flag = True
                         if final_finger == 5:
-                            cv2.putText(img_rgb, str(final_direction), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 2,
-                                        (0, 0, 255), 3, cv2.LINE_AA)
+                            cv2.putText(img_rgb, "CHANGE_PLAY_MODE", (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                                        (0, 0, 255), 2, cv2.LINE_AA)
+                            cv2.putText(frame_to_show, "CHANGE_PLAY_MODE", (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                                        (0, 0, 255), 2, cv2.LINE_AA)
+                        if final_finger == 3:
+                            cv2.putText(img_rgb, "PLAY_OR_PAUSE", (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                                        (0, 0, 255), 2, cv2.LINE_AA)
+                            cv2.putText(frame_to_show, "PLAY_OR_PAUSE", (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                                        (0, 0, 255), 2, cv2.LINE_AA)
                         if (final_direction is not None) and (final_direction != 'NOT_FOUND'):
                             cv2.putText(img_rgb, str(final_direction), (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255)
                                         , 3, cv2.LINE_AA)
@@ -226,8 +227,8 @@ class HandDetection(threading.Thread):
                     else:
                         frame_cnt -= 1
 
-            # self.music_app.convert_image(img_rgb)
-            self.music_app.convert_image(frame_to_show)
+            self.music_app.convert_image(img_rgb)
+            # self.music_app.convert_image(frame_to_show)
             cv2.waitKey(10)
 
 

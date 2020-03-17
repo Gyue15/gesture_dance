@@ -2,8 +2,8 @@ import sys
 
 import numpy as np
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QPalette, QColor, QStandardItemModel, QStandardItem, QImage, QPixmap
-from PyQt5.QtCore import QUrl, QDirIterator, Qt, QTimer
+from PyQt5.QtGui import QPalette, QColor, QStandardItemModel, QStandardItem, QImage, QPixmap, QIcon
+from PyQt5.QtCore import QUrl, QDirIterator, Qt, QTimer, QCoreApplication
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QFileDialog, QAction, QHBoxLayout, \
     QVBoxLayout, QSlider, QAbstractItemView, QHeaderView, QLabel
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
@@ -18,7 +18,7 @@ class MusicApp(QMainWindow):
         super().__init__()
         self.player = QMediaPlayer()
         self.playlist = QMediaPlaylist()
-        self.title = 'GestureTunes - player window'
+        self.title = 'GestureTunes - player'
         self.left = 300
         self.top = 300
         self.width = 600
@@ -35,7 +35,7 @@ class MusicApp(QMainWindow):
         self.widget = QWidget()
         self.widget.move(1000, 200)
         self.widget.resize(300, 200)
-        self.widget.setWindowTitle("GestureTunes - gesture window")  # 窗口标题
+        self.widget.setWindowTitle("GestureTunes - gesture panel")  # 窗口标题
         self.videoFrame = QLabel('正在打开摄像头，请稍等...')
         video_area = QVBoxLayout()
         self.widget.setLayout(video_area)
@@ -50,6 +50,15 @@ class MusicApp(QMainWindow):
         self.have_song = False
         self.volume_slider = QSlider(Qt.Horizontal, self)
         self.volume_slider.setTracking(True)
+        # 播放模式
+        self.play_style = '列表循环'
+        self.single_img = QIcon('pics/single.png')
+        self.loop_img = QIcon('pics/loop.png')
+        self.play_style_btn = QPushButton()
+        self.play_style_btn.setIcon(self.loop_img)
+        self.play_tip = ''
+
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
 
         # 初始化界面
         self.init_ui()
@@ -57,26 +66,21 @@ class MusicApp(QMainWindow):
     def init_ui(self):
         # Add file menu
         menubar = self.menuBar()
-        filemenu = menubar.addMenu('File')
-        windowmenu = menubar.addMenu('Window')
+        file_menu = menubar.addMenu('文件')
 
-        fileAct = QAction('Open File', self)
-        folderAct = QAction('Open Folder', self)
-        themeAct = QAction('Toggle light/dark theme', self)
+        fileAct = QAction('打开文件', self)
+        folderAct = QAction('打开文件夹', self)
 
-        filemenu.addAction(fileAct)
-        filemenu.addAction(folderAct)
-        windowmenu.addAction(themeAct)
+        file_menu.addAction(fileAct)
+        file_menu.addAction(folderAct)
 
         fileAct.triggered.connect(self.open_file)
         folderAct.triggered.connect(self.add_files)
-        themeAct.triggered.connect(self.toggle_colors)
 
         self.add_listener()
 
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.toggle_colors()
         self.show()
 
     def add_listener(self):
@@ -100,13 +104,13 @@ class MusicApp(QMainWindow):
         # 按钮的layout
         control_area = QVBoxLayout()  # centralWidget
         self.media_controls = QHBoxLayout()
-        # file_controls = QHBoxLayout()
 
         # 将播放控件添加到layout
         self.media_controls.addWidget(open_btn)
         self.media_controls.addWidget(prev_btn)
         self.media_controls.addWidget(self.play_btn)
         self.media_controls.addWidget(next_btn)
+        self.media_controls.addWidget(self.play_style_btn)
         self.media_controls.addWidget(self.volume_slider)
 
         # 将layout添加到界面中
@@ -120,6 +124,7 @@ class MusicApp(QMainWindow):
         prev_btn.clicked.connect(self.prev)
         next_btn.clicked.connect(self.next)
         self.song_list.doubleClicked.connect(self.change_song)
+        self.play_style_btn.clicked.connect(self.change_play_style)
 
         self.statusBar()
         self.playlist.currentMediaChanged.connect(self.song_changed)
@@ -162,23 +167,24 @@ class MusicApp(QMainWindow):
         self.song_list.selectRow(0)
         self.set_play_list()
         self.player.pause()
-        self.statusBar().showMessage("暂停：" + self.playlist.currentMedia().canonicalUrl().fileName())
+        self.play_tip = "暂停：" + self.playlist.currentMedia().canonicalUrl().fileName()
+        self.statusBar().showMessage(self.play_tip + " - " + self.play_style)
         self.have_song = True
 
     def folder_iterator(self):
-        folder_chosen = QFileDialog.getExistingDirectory(self, 'Open Music Folder', '~')
+        folder_chosen = QFileDialog.getExistingDirectory(self, '打开文件夹', '~')
         if folder_chosen is not None:
             it = QDirIterator(folder_chosen)
             it.next()
             while it.hasNext():
                 if (not it.fileInfo().isDir()) and it.filePath() != '.':
-                    fInfo = it.fileInfo()
-                    if fInfo.suffix() in ('mp3', 'ogg', 'wav', 'm4a'):
+                    f_info = it.fileInfo()
+                    if f_info.suffix() in ('mp3', 'ogg', 'wav', 'm4a'):
                         self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(it.filePath())))
                 it.next()
             if (not it.fileInfo().isDir()) and it.filePath() != '.':
-                fInfo = it.fileInfo()
-                if fInfo.suffix() in ('mp3', 'ogg', 'wav', 'm4a'):
+                f_info = it.fileInfo()
+                if f_info.suffix() in ('mp3', 'ogg', 'wav', 'm4a'):
                     self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(it.filePath())))
 
     def start_or_stop(self):
@@ -190,12 +196,13 @@ class MusicApp(QMainWindow):
                     (self.player.state() == QMediaPlayer.PlayingState and self.play_btn.text() == '暂停'):
                 self.player.pause()
                 self.play_btn.setText('播放')
-                self.statusBar().showMessage("暂停：" + self.playlist.currentMedia().canonicalUrl().fileName())
+                self.play_tip = "暂停：" + self.playlist.currentMedia().canonicalUrl().fileName()
             elif self.player.state() == QMediaPlayer.PausedState or \
                     (self.player.state() == QMediaPlayer.PlayingState and self.play_btn.text() == '播放'):
                 self.player.play()
                 self.play_btn.setText('暂停')
-                self.statusBar().showMessage("正在播放：" + self.playlist.currentMedia().canonicalUrl().fileName())
+                self.play_tip = "正在播放：" + self.playlist.currentMedia().canonicalUrl().fileName()
+            self.statusBar().showMessage(self.play_tip + " - " + self.play_style)
 
     def change_volume(self, value):
         self.player.setVolume(value)
@@ -230,30 +237,24 @@ class MusicApp(QMainWindow):
     def song_changed(self, media):
         if not media.isNull():
             url = media.canonicalUrl()
-            self.statusBar().showMessage("正在播放：" + url.fileName())
+            self.play_tip = "正在播放：" + url.fileName()
+            self.statusBar().showMessage(self.play_tip + " - " + self.play_style)
             self.song_list.selectRow(self.playlist.currentIndex())
 
     def change_song(self):
         index = self.song_list.currentIndex().row()  # 获取双击所在行
         self.playlist.setCurrentIndex(index)
 
-    def toggle_colors(self):
-        app.setStyle("Fusion")
-        palette = QPalette()
-        palette.setColor(QPalette.Window, QColor(53, 53, 53))
-        palette.setColor(QPalette.WindowText, Qt.white)
-        palette.setColor(QPalette.Base, QColor(25, 25, 25))
-        palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        palette.setColor(QPalette.ToolTipBase, Qt.white)
-        palette.setColor(QPalette.ToolTipText, Qt.white)
-        palette.setColor(QPalette.Text, Qt.white)
-        palette.setColor(QPalette.Button, QColor(53, 53, 53))
-        palette.setColor(QPalette.ButtonText, Qt.white)
-        palette.setColor(QPalette.BrightText, Qt.red)
-        palette.setColor(QPalette.Link, QColor(100, 149, 237))
-        palette.setColor(QPalette.Highlight, QColor(100, 149, 237))
-        palette.setColor(QPalette.HighlightedText, Qt.black)
-        app.setPalette(palette)
+    def change_play_style(self):
+        if self.playlist.playbackMode() == QMediaPlaylist.Loop:
+            self.playlist.setPlaybackMode(QMediaPlaylist.CurrentItemInLoop)
+            self.play_style = "单曲循环"
+            self.play_style_btn.setIcon(self.single_img)
+        elif self.playlist.playbackMode() == QMediaPlaylist.CurrentItemInLoop:
+            self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+            self.play_style = "列表循环"
+            self.play_style_btn.setIcon(self.loop_img)
+        self.statusBar().showMessage(self.play_tip + " - " + self.play_style)
 
     def convert_image(self, frame):
         if len(frame.shape) == 2:  # 若是灰度图则转为三通道
@@ -270,8 +271,12 @@ class MusicApp(QMainWindow):
         if self.rec_res['set'] and not self.rec_res['used']:
             final_direction = self.rec_res['direction']
             final_fingers = self.rec_res['fingers']
-            if final_fingers == 5:
+            if final_fingers == 3:
                 self.start_or_stop()
+                self.rec_res['used'] = True
+                return
+            if final_fingers == 5:
+                self.change_play_style()
                 self.rec_res['used'] = True
                 return
             if final_direction is not None and final_direction != 'NOT_FOUND':
@@ -292,10 +297,31 @@ class MusicApp(QMainWindow):
         self.rec_res = res
 
 
+def set_colors(music_app):
+    music_app.setStyle("Fusion")
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(53, 53, 53))
+    palette.setColor(QPalette.WindowText, Qt.white)
+    palette.setColor(QPalette.Base, QColor(25, 25, 25))
+    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+    palette.setColor(QPalette.ToolTipBase, Qt.white)
+    palette.setColor(QPalette.ToolTipText, Qt.white)
+    palette.setColor(QPalette.Text, Qt.white)
+    palette.setColor(QPalette.Button, QColor(53, 53, 53))
+    palette.setColor(QPalette.ButtonText, Qt.white)
+    palette.setColor(QPalette.BrightText, Qt.red)
+    palette.setColor(QPalette.Link, QColor(100, 149, 237))
+    palette.setColor(QPalette.Highlight, QColor(100, 149, 237))
+    palette.setColor(QPalette.HighlightedText, Qt.black)
+    music_app.setPalette(palette)
+    pass
+
+
 if __name__ == '__main__':
     # run_detection()
     app = QApplication(sys.argv)
     ex = MusicApp()
+    set_colors(app)
     detection_thread = HandDetection(ex)
     detection_thread.start()
     sys.exit(app.exec_())
