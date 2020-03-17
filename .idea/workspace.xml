@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e5fa780-8500-4a2b-a4b1-55bc45c76d66" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/music_player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hand_rec.py" beforeDir="false" afterPath="$PROJECT_DIR$/hand_rec.py" afterDir="false" />
     </list>
@@ -36,6 +37,7 @@
     <property name="last_opened_file_path" value="/usr/local/Cellar/python3/3.6.1/bin/python3.6" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -44,7 +46,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.hand_rec">
+  <component name="RunManager" selected="Python.music_player">
     <configuration name="demo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="gesture_dance" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -133,8 +135,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="music_player" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="gesture_dance" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/music_player.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.music_player" />
         <item itemvalue="Python.hand_rec" />
         <item itemvalue="Python.finger" />
         <item itemvalue="Python.demo" />
@@ -172,7 +197,9 @@
       <workItem from="1582615346314" duration="182000" />
       <workItem from="1582620163910" duration="9039000" />
       <workItem from="1583581661678" duration="2976000" />
-      <workItem from="1584010129838" duration="31397000" />
+      <workItem from="1584010129838" duration="34082000" />
+      <workItem from="1584366473558" duration="2847000" />
+      <workItem from="1584369526203" duration="14732000" />
     </task>
     <servers />
   </component>
@@ -196,46 +223,46 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="507" y="212" key="FileChooserDialogImpl/0.0.1440.900@0.0.1440.900" timestamp="1582612917062" />
-    <state width="1398" height="224" key="GridCell.Tab.0.bottom" timestamp="1584355392521">
+    <state width="1398" height="317" key="GridCell.Tab.0.bottom" timestamp="1584429378635">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584355392521" />
+    <state width="1398" height="317" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584429378635" />
     <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.23.1440.822@0.23.1440.822" timestamp="1582615528432" />
-    <state width="1398" height="224" key="GridCell.Tab.0.center" timestamp="1584355392520">
+    <state width="1398" height="317" key="GridCell.Tab.0.center" timestamp="1584429378634">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1584355392520" />
+    <state width="1398" height="317" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1584429378634" />
     <state width="1398" height="245" key="GridCell.Tab.0.center/0.23.1440.822@0.23.1440.822" timestamp="1582615528428" />
-    <state width="1398" height="224" key="GridCell.Tab.0.left" timestamp="1584355392520">
+    <state width="1398" height="317" key="GridCell.Tab.0.left" timestamp="1584429378633">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1584355392520" />
+    <state width="1398" height="317" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1584429378633" />
     <state width="1398" height="245" key="GridCell.Tab.0.left/0.23.1440.822@0.23.1440.822" timestamp="1582615528427" />
-    <state width="1398" height="224" key="GridCell.Tab.0.right" timestamp="1584355392521">
+    <state width="1398" height="317" key="GridCell.Tab.0.right" timestamp="1584429378635">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1584355392521" />
+    <state width="1398" height="317" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1584429378635" />
     <state width="1398" height="245" key="GridCell.Tab.0.right/0.23.1440.822@0.23.1440.822" timestamp="1582615528430" />
-    <state width="1398" height="303" key="GridCell.Tab.1.bottom" timestamp="1584019776972">
+    <state width="1398" height="303" key="GridCell.Tab.1.bottom" timestamp="1584366450023">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="303" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584019776972" />
-    <state width="1398" height="303" key="GridCell.Tab.1.center" timestamp="1584019776960">
+    <state width="1398" height="303" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1584366450023" />
+    <state width="1398" height="303" key="GridCell.Tab.1.center" timestamp="1584366450022">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="303" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1584019776960" />
-    <state width="1398" height="303" key="GridCell.Tab.1.left" timestamp="1584019776959">
+    <state width="1398" height="303" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1584366450022" />
+    <state width="1398" height="303" key="GridCell.Tab.1.left" timestamp="1584366450022">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="303" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1584019776959" />
-    <state width="1398" height="303" key="GridCell.Tab.1.right" timestamp="1584019776962">
+    <state width="1398" height="303" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1584366450022" />
+    <state width="1398" height="303" key="GridCell.Tab.1.right" timestamp="1584366450023">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="303" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1584019776962" />
-    <state x="221" y="89" key="SettingsEditor" timestamp="1582614840133">
+    <state width="1398" height="303" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1584366450023" />
+    <state x="348" y="178" key="SettingsEditor" timestamp="1584367405029">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1582614840133" />
+    <state x="348" y="178" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1584367405029" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1583581506923">
       <screen x="0" y="23" width="1440" height="822" />
     </state>
@@ -250,7 +277,8 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/gesture_dance$demo.coverage" NAME="demo Coverage Results" MODIFIED="1583758818876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/gesture_dance$hand_rec.coverage" NAME="hand_rec Coverage Results" MODIFIED="1584355392514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gesture_dance$hand_rec.coverage" NAME="hand_rec Coverage Results" MODIFIED="1584425427634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gesture_dance$music_player.coverage" NAME="music_player Coverage Results" MODIFIED="1584429378610" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gesture_dance$finger.coverage" NAME="finger Coverage Results" MODIFIED="1584014320615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gesture_dance$main.coverage" NAME="main Coverage Results" MODIFIED="1582615382791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
